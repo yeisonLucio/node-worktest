@@ -1,6 +1,20 @@
 {
-    "name": "nombre",
     "results": "resultados",
     "count": "cantidad",
-    "films": "peliculas"
+    "birth_year": "año de nacimiento",
+    "eye_color": "color de ojos",
+    "films": "películas",
+    "gender": "género",
+    "hair_color": "color de cabello",
+    "height": "altura",
+    "homeworld": "planeta natal",
+    "mass": "masa",
+    "name": "nombre",
+    "skin_color": "color de piel",
+    "created": "creado",
+    "edited": "editado",
+    "species": "especies",
+    "starships": "naves espaciales",
+    "url": "URL",
+    "vehicles": "vehículos"
 }

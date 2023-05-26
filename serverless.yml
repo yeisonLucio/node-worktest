@@ -22,7 +22,7 @@ functions:
     role: getProductRole
     events:
       - http:
-          path: v1/product
+          path: v1/product/{id}
           method: get
 
   transformer:

@@ -18,19 +18,12 @@ export class DynamodbProductRepository implements ProductRepository {
             try {
                 const command = new PutItemCommand({
                     TableName: this.tableName,
-                    Item: marshall(product, {removeUndefinedValues: true}),
-                    ReturnValues: "ALL_OLD"
+                    Item: marshall(product, { removeUndefinedValues: true }),
                 })
 
-                const result = await this.dynamodbClient.send(command)
+                await this.dynamodbClient.send(command)
 
-                if (!result.Attributes) {
-                    reject("attributes not returned")
-                }
-
-                const newProduct = unmarshall(result.Attributes!) as Product;
-
-                resolve(newProduct);
+                resolve(product);
             } catch (error) {
                 reject(error);
             }
@@ -38,20 +31,20 @@ export class DynamodbProductRepository implements ProductRepository {
     }
 
 
-    getById(id: number): Promise<Product> {
+    getById(id: string): Promise<Product> {
         return new Promise(async (resolve, reject) => {
             try {
                 const command = new GetItemCommand({
                     TableName: this.tableName,
                     Key: {
-                        id: { N: String(id) }
+                        id: { S: id }
                     }
                 })
 
                 const result = await this.dynamodbClient.send(command)
 
                 if (!result.Item) {
-                    reject("item not returned")
+                    reject("item not found")
                 }
 
                 const newProduct = unmarshall(result.Item!) as Product;

@@ -13,8 +13,6 @@ const productRepository: ProductRepository = container.get(TYPES.productReposito
 
 export const handler: ProxyHandler = async (event) => {
     try {
-        console.log(event.body);
-        
         const request = await validateRequest(JSON.parse(event.body!), NewProductRequestDTO)
 
         let product: Product = {
@@ -24,8 +22,6 @@ export const handler: ProxyHandler = async (event) => {
             quantity: request.quantity,
             reference: request.reference
         };
-
-        console.log(product);
         
         const result = await productRepository.create(product)
 
@@ -34,8 +30,6 @@ export const handler: ProxyHandler = async (event) => {
             body: JSON.stringify(result)
         }
     } catch (error) {
-        console.log(error);
-        
         return {
             statusCode: 500,
             body: JSON.stringify(error)
