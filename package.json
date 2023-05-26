@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf build && tsc",
-    "deploy": "npm run build && sls deploy"
+    "deploy": "npm run build && node_modules/.bin/serverless deploy"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +28,7 @@
     "class-validator": "^0.14.0",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13",
+    "serverless": "^3.31.0",
     "uuid": "^9.0.0"
   }
 }
