@@ -5,13 +5,16 @@ provider:
   runtime: nodejs18.x
   stage: ${opt:stage, 'dev'}
   region: us-east-1
+  environment:
+    PRODUCT_TABLE_NAME:  products-${self:provider.stage}
 
 custom:
-  stage: ${opt:stage, 'dev'}
+  productTableArn: "arn:aws:dynamodb:::table/products-${self:provider.stage}"
 
 functions:
   create-product:
     handler: build/product/create-product/index.handler
+    role: createProductRole
     events:
       - http:
           path: v1/product
@@ -19,6 +22,7 @@ functions:
 
   get-product:
     handler: build/product/get-product/index.handler
+    role: getProductRole
     events:
       - http:
           path: v1/product
@@ -30,3 +34,68 @@ functions:
       - http:
           path: v1/transformer
           method: get
+
+resources:
+  Resources:
+    ProductsTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: products-${self:provider.stage}
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    createProductRole:
+        Type: AWS::IAM::Role
+        Properties:
+          RoleName: create-product-role
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  Service: lambda.amazonaws.com
+                Action: sts:AssumeRole
+          Policies:
+            - PolicyName: DynamoDBPutAndGetPolicy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - dynamodb:PutItem
+                      - dynamodb:GetItem
+                    Resource: ${self:custom.productTableArn}
+
+    getProductRole:
+        Type: AWS::IAM::Role
+        Properties:
+          RoleName: get-product-role
+          AssumeRolePolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Principal:
+                  Service: lambda.amazonaws.com
+                Action: sts:AssumeRole
+          Policies:
+            - PolicyName: DynamoDBGetPolicy
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - dynamodb:GetItem
+                    Resource: ${self:custom.productTableArn}
+
+      
