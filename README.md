@@ -16,6 +16,10 @@ Utiliza una **DynamoDB** como base de datos y el modelo de datos utilizado es el
   }
   ```
 
+La arquitectura utilizada es la siguiente:
+
+![](arquitectura.png)
+
 ## Dependencias
   * nodejs
 
