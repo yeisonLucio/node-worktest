@@ -1,0 +1,32 @@
+service: node-worktest
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+
+custom:
+  stage: ${opt:stage, 'dev'}
+
+functions:
+  create-product:
+    handler: build/product/create-product/index.handler
+    events:
+      - http:
+          path: v1/product
+          method: post
+
+  get-product:
+    handler: build/product/get-product/index.handler
+    events:
+      - http:
+          path: v1/product
+          method: get
+
+  transformer:
+    handler: build/transformer/index.handler
+    events:
+      - http:
+          path: v1/transformer
+          method: get
