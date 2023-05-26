@@ -1,0 +1,91 @@
+{
+	"info": {
+		"_postman_id": "e89e7acf-b54f-4ffa-95c4-40f3f1506b33",
+		"name": "node-testwork",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13041292"
+	},
+	"item": [
+		{
+			"name": "transformer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/dev/v1/transformer?model=people&modelId=1&language=es",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"v1",
+						"transformer"
+					],
+					"query": [
+						{
+							"key": "model",
+							"value": "people"
+						},
+						{
+							"key": "modelId",
+							"value": "1"
+						},
+						{
+							"key": "language",
+							"value": "es"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"arroz\",\n    \"reference\": \"asd\",\n    \"price\": 2000,\n    \"quantity\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/dev/v1/product",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/dev/v1/product/a8938033-f672-4fc9-936a-b9912dde08a4",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"v1",
+						"product",
+						"a8938033-f672-4fc9-936a-b9912dde08a4"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
