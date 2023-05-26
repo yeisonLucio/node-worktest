@@ -2,7 +2,7 @@ import {APIGatewayProxyEventV2, APIGatewayProxyResultV2, Handler} from "aws-lamb
 import container from "./di/container";
 import { StarWarsRepository } from "./repositories/contracts/StartWarsRepository";
 import { TYPES } from "./di/types";
-import { unMarshal } from "./helpers/unmarshal";
+import { validateRequest } from "../common/helpers/ValidateRequest";
 import { TransformerRequestDTO } from "./dtos/transformerRequestDTO";
 import { loadTranslations, translateObjectKeys } from "./helpers/Translation";
 
@@ -13,7 +13,7 @@ const starWarsRepository: StarWarsRepository = container.get(TYPES.starWarsRepos
 export const handler: ProxyHandler = async (event) => {
 
     try {
-        const request = await unMarshal(event.queryStringParameters!, TransformerRequestDTO)
+        const request = await validateRequest(event.queryStringParameters!, TransformerRequestDTO)
 
         const translator = loadTranslations(request.language)
 

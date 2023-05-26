@@ -8,9 +8,6 @@ provider:
   environment:
     PRODUCT_TABLE_NAME:  products-${self:provider.stage}
 
-custom:
-  productTableArn: "arn:aws:dynamodb:::table/products-${self:provider.stage}"
-
 functions:
   create-product:
     handler: build/product/create-product/index.handler
@@ -42,15 +39,11 @@ resources:
       Properties:
         TableName: products-${self:provider.stage}
         AttributeDefinitions:
-          - AttributeName: pk
-            AttributeType: S
-          - AttributeName: sk
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: pk
+          - AttributeName: id
             KeyType: HASH
-          - AttributeName: sk
-            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
@@ -75,7 +68,21 @@ resources:
                     Action:
                       - dynamodb:PutItem
                       - dynamodb:GetItem
-                    Resource: ${self:custom.productTableArn}
+                    Resource: "arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/products-${self:provider.stage}"
+                  - Effect: Allow
+                    Action:
+                      - logs:CreateLogGroup
+                      - logs:CreateLogStream
+                      - logs:PutLogEvents
+                      - logs:TagResource
+                    Resource:
+                      - 'Fn::Join':
+                        - ':'
+                        -
+                          - 'arn:aws:logs'
+                          - Ref: 'AWS::Region'
+                          - Ref: 'AWS::AccountId'
+                          - 'log-group:/aws/lambda/*:*:*'
 
     getProductRole:
         Type: AWS::IAM::Role
@@ -96,6 +103,20 @@ resources:
                   - Effect: Allow
                     Action:
                       - dynamodb:GetItem
-                    Resource: ${self:custom.productTableArn}
+                    Resource: "arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/products-${self:provider.stage}"
+                  - Effect: Allow
+                    Action:
+                      - logs:CreateLogGroup
+                      - logs:CreateLogStream
+                      - logs:PutLogEvents
+                      - logs:TagResource
+                    Resource:
+                      - 'Fn::Join':
+                        - ':'
+                        -
+                          - 'arn:aws:logs'
+                          - Ref: 'AWS::Region'
+                          - Ref: 'AWS::AccountId'
+                          - 'log-group:/aws/lambda/*:*:*'
 
       
